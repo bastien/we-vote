@@ -1,12 +1,23 @@
-class DelegatedVotesCalculation
+class VotesDelegator
+  
+  def initialize(proposal_id, theme_id=nil)
+    @theme_id = theme_id # for instance : {:theme_id => 3}
+    @proposal_id = proposal_id
+  end
+  
+  def extra_delegation_params
+    return {} if @theme_id.blank?
+    {'delegations.theme_id' => @theme_id}
+  end
   
   # This method will initialize the table with all the person that have already voted
   #
   def initialize_existing_votes
-    Vote.all.each do |vote|
+    Vote.where(:proposal_id => @proposal_id).each do |vote|
       DelegatedVote.create( :user_id => vote.user_id, 
                             :current_value => vote.value, 
-                            :last_value => vote.value, 
+                            :last_value => vote.value,
+                            :proposal_id => @proposal_id,
                             :last_increment => vote.value )
     end
   end
@@ -15,26 +26,26 @@ class DelegatedVotesCalculation
   #
   def delegatees(delegated_vote)
     Delegation.where('delegations.delegated_id' => delegated_vote.user_id, 
-                     'votes.value' => nil).joins("LEFT JOIN votes ON votes.user_id = delegations.delegatee_id")
+                     'votes.value' => nil).where(extra_delegation_params).joins("LEFT JOIN votes ON votes.user_id = delegations.delegatee_id")
   end
   
   def delegate_one(delegatee, delegated_vote)
-    divider = Delegation.where(:delegatee_id => delegatee.delegatee_id).count
-    if target_vote = DelegatedVote.where(:user_id => delegatee.delegatee_id).first
+    divider = Delegation.where(:delegatee_id => delegatee.delegatee_id).where(extra_delegation_params).count
+    if target_vote = DelegatedVote.where(:user_id => delegatee.delegatee_id, :proposal_id => @proposal_id).first
       if target_vote.affected
         target_vote.update_attributes(:affected => true, :current_value => target_vote.current_value + partial_vote(delegated_vote, divider) )
       else
         target_vote.update_attributes(:affected => true, :current_value => target_vote.last_value + partial_vote(delegated_vote, divider) )
       end
     else
-      new_vote = DelegatedVote.create(:user_id => delegatee.delegatee_id, :current_value => partial_vote(delegated_vote, divider))
+      new_vote = DelegatedVote.create(:proposal_id => @proposal_id, :user_id => delegatee.delegatee_id, :current_value => partial_vote(delegated_vote, divider))
     end
   end
   
   # Looping through all the delegated votes that have changed during the last loop
   #
   def delegate_all
-    DelegatedVote.where('ABS(last_increment) > ?', 0.0001).each do |delegated_vote|
+    DelegatedVote.where('ABS(last_increment) > ? AND proposal_id = ?', 0.0001, @proposal_id).each do |delegated_vote|
       delegatees(delegated_vote).each do |delegatee|
         delegate_one(delegatee, delegated_vote)
       end
@@ -46,7 +57,7 @@ class DelegatedVotesCalculation
   # trying to store everything on so few colums is problematic, doesn't work
   #
   def prepare_for_next_round
-    DelegatedVote.where('affected = ? OR last_affected = ?', true, true).each do |delegated_vote|
+    DelegatedVote.where('affected = ? OR last_affected = ? AND proposal_id = ?', true, true, @proposal_id).each do |delegated_vote|
       if delegated_vote.last_affected && !delegated_vote.affected
         delegated_vote.last_affected = false
         delegated_vote.last_increment = 0

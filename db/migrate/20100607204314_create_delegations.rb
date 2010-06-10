@@ -3,6 +3,7 @@ class CreateDelegations < ActiveRecord::Migration
     create_table :delegations do |t|
       t.integer :delegatee_id
       t.integer :delegated_id
+      t.integer :theme_id
 
       t.timestamps
     end

@@ -13,6 +13,7 @@ ActiveRecord::Schema.define(:version => 20100607205035) do
 
   create_table "delegated_votes", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "proposal_id"
     t.float    "current_value"
     t.float    "last_increment"
     t.float    "last_value"
@@ -25,12 +26,14 @@ ActiveRecord::Schema.define(:version => 20100607205035) do
   create_table "delegations", :force => true do |t|
     t.integer  "delegatee_id"
     t.integer  "delegated_id"
+    t.integer  "theme_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "votes", :force => true do |t|
     t.integer  "user_id"
+    t.integer  "proposal_id"
     t.float    "value"
     t.datetime "created_at"
     t.datetime "updated_at"
