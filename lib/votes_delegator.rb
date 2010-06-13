@@ -1,5 +1,7 @@
 class VotesDelegator
   
+  MAX_LOOP = 10
+  
   def initialize(proposal_id, theme_id=nil)
     @theme_id = theme_id # for instance : {:theme_id => 3}
     @proposal_id = proposal_id
@@ -45,11 +47,12 @@ class VotesDelegator
   # Looping through all the delegated votes that have changed during the last loop
   #
   def delegate_all
-    DelegatedVote.where('ABS(last_increment) > ? AND proposal_id = ?', 0.0001, @proposal_id).each do |delegated_vote|
+    delegating = DelegatedVote.where('ABS(last_increment) > ? AND proposal_id = ?', 0.0001, @proposal_id).each do |delegated_vote|
       delegatees(delegated_vote).each do |delegatee|
         delegate_one(delegatee, delegated_vote)
       end
     end
+    delegating.size > 0 
   end
   
   # reset the current_value column
@@ -82,10 +85,14 @@ class VotesDelegator
   def start
     # first round, initialization
     initialize_existing_votes
-    
-    5.times do
-      delegate_all
-      prepare_for_next_round
+    i = 0
+    continue = true
+    MAX_LOOP
+    while continue && i < MAX_LOOP do
+      i += 1
+      if continue = delegate_all
+        prepare_for_next_round
+      end
     end
   end
   
