@@ -3,7 +3,7 @@ class VotesDelegator
   MAX_LOOP = 10
   
   def initialize(proposal_id, changed_vote_ids=[], theme_id=nil)
-    @theme_id = theme_id # for instance : {:theme_id => 3}
+    @theme_id = theme_id
     @proposal_id = proposal_id
     if changed_vote_ids.empty?
       initialize_existing_votes
@@ -17,6 +17,8 @@ class VotesDelegator
     {'delegations.theme_id' => @theme_id}
   end
   
+  # Will initialize the delegated vote corresponding to the vote_ids provided
+  #
   def initialize_changed_votes(changed_vote_ids)
     Vote.where("proposal_id = ? AND id IN (?)", @proposal_id, changed_vote_ids).each do |vote|
       if delegated_vote = DelegatedVote.where(:user_id => vote.user_id, :proposal_id => @proposal_id).first
@@ -39,13 +41,6 @@ class VotesDelegator
   #
   def initialize_existing_votes
     initialize_changed_votes(Vote.where(:proposal_id => @proposal_id).map(&:id))
-    # Vote.where(:proposal_id => @proposal_id).each do |vote|
-    #       DelegatedVote.create( :user_id => vote.user_id, 
-    #                             :current_value => vote.value, 
-    #                             :last_value => vote.value,
-    #                             :proposal_id => @proposal_id,
-    #                             :last_increment => vote.value )
-    #     end
   end
   
   # Returns the list of all the delegation given to user with the current vote
@@ -106,6 +101,8 @@ class VotesDelegator
     end
   end
   
+  # Launching the algorithm
+  #
   def start
     i = 0
     continue = true
