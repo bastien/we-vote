@@ -70,6 +70,28 @@ describe VotesDelegator do
   describe "the delegation process" do
     
     before(:each) do
+      Vote.create!(:user_id => 1, :value => -1, :proposal_id => 30)
+      Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
+      Delegation.create(:delegatee_id => 3, :delegated_id => 2)
+      Delegation.create(:delegatee_id => 4, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 4, :delegated_id => 3)
+      Delegation.create(:delegatee_id => 5, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 5, :delegated_id => 4)
+      Delegation.create(:delegatee_id => 2, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 1, :delegated_id => 2)
+    end
+    
+    it "should also work when there are negative values" do
+      VotesDelegator.new(30).start
+      DelegatedVote.count.should == 5
+      DelegatedVote.all.map{|dv| dv.last_value }.should == [-1,1,0,-0.5,1]
+    end
+        
+  end
+  
+  describe "the delegation process" do
+    
+    before(:each) do
       Vote.create!(:user_id => 1, :value => 1, :proposal_id => 30)
       Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
       Delegation.create(:delegatee_id => 3, :delegated_id => 1)
@@ -84,6 +106,29 @@ describe VotesDelegator do
       DelegatedVote.count.should == 0
     end
         
+  end
+  
+  describe "when a vote changes" do
+    
+    before(:each) do
+      Vote.create!(:user_id => 1, :value => 1, :proposal_id => 30)
+      Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
+      Delegation.create(:delegatee_id => 3, :delegated_id => 2)
+      Delegation.create(:delegatee_id => 4, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 4, :delegated_id => 3)
+      Delegation.create(:delegatee_id => 5, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 5, :delegated_id => 4)
+      Delegation.create(:delegatee_id => 2, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 1, :delegated_id => 2)
+    end
+    
+    it "should assign a new value to all the person who delegated their vote" do
+      VotesDelegator.new(30).start
+      new_vote = Vote.create!(:user_id => 3, :value => -1, :proposal_id => 30)
+      VotesDelegator.new(30, [new_vote.id]).start
+      DelegatedVote.all.map{|dv| dv.last_value }.should == [1,1,0,0.5,-1]
+    end
+    
   end
   
 end
