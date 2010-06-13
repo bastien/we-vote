@@ -116,13 +116,6 @@ class VotesDelegator
         prepare_for_next_round
       end
     end
-    # reset_last_increment
-  end
-  
-  def reset_last_increment
-    DelegatedVote.where('last_increment != 0 AND proposal_id = ?', @proposal_id).each do |delegated_vote|
-      delegated_vote.update_attribute(:last_increment, 0)
-    end
   end
   
   def partial_vote(delegated_vote, partition)
