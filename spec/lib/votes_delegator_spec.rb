@@ -131,4 +131,52 @@ describe VotesDelegator do
     
   end
   
+  describe "initialization of the delegation" do
+    
+    describe "first initialization" do
+      before(:each) do
+        Vote.create!(:user_id => 1, :value => 1, :proposal_id => 30)
+        Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
+        Vote.create!(:user_id => 1, :value => 1, :proposal_id => 31)
+      end
+      it "should assign a delegated vote for each of the existing votes" do
+        init_count = DelegatedVote.count
+        VotesDelegator.new(30)
+        DelegatedVote.count.should == init_count + 2
+        DelegatedVote.all.map{|dv| dv.user_id }.should == [1, 2]
+      end
+    end
+    
+    describe "when a vote changes" do
+      before(:each) do
+        @first_vote = Vote.create!(:user_id => 1, :value => 1, :proposal_id => 30)
+        @second_vote =Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
+        @delegated_vote = DelegatedVote.create!(:user_id => 1, :proposal_id => 30, :last_value => 1)
+      end
+       it "should update the vote that has changed" do
+          @first_vote.update_attribute(:value, -1)
+          init_count = DelegatedVote.count
+          VotesDelegator.new(30, [@first_vote.id])
+          DelegatedVote.count.should == init_count
+          @delegated_vote.reload
+          @delegated_vote.current_value.should == -1
+          @delegated_vote.last_increment.should == -2
+          @delegated_vote.last_value.should == -1
+          DelegatedVote.all.map{|dv| dv.user_id }.should == [1]
+        end
+        
+        it "should create the vote if it didn't exist" do
+            init_count = DelegatedVote.count
+            VotesDelegator.new(30, [@second_vote.id])
+            DelegatedVote.count.should == init_count + 1
+            new_vote = DelegatedVote.last
+            new_vote.current_value.should == 1
+            new_vote.last_increment.should == 1
+            new_vote.last_value.should == 1
+            DelegatedVote.all.map{|dv| dv.user_id }.should == [1, 2]
+          end
+    end
+    
+  end
+  
 end
