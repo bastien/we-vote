@@ -179,4 +179,46 @@ describe VotesDelegator do
     
   end
   
+  describe "prepare for next round" do
+    before(:each) do
+      @delegator = VotesDelegator.new(30)
+      @affected = DelegatedVote.create!(:user_id => 1, :proposal_id => 30, :last_value => 0.5, :current_value => 1, :last_increment => 0.5, :affected => true)
+      @last_affected =DelegatedVote.create!(:user_id => 2, :proposal_id => 30, :last_value => 0.5, :current_value => 1, :last_increment => 0.5, :affected => false, :last_affected => true)
+      @new_vote =DelegatedVote.create!(:user_id => 3, :proposal_id => 30, :last_value => nil, :current_value => 1, :last_increment => 1)
+      @unaffected = DelegatedVote.create!(:user_id => 4, :proposal_id => 30, :last_value => 0.5, :current_value => 0.5, :last_increment => 0.25, :affected => false, :last_affected => false)
+    end
+    
+    it "should modify the delegated votes that are flagged as affected" do
+      @delegator.prepare_for_next_round
+      @last_affected.reload
+      @last_affected.last_affected.should == false
+      @last_affected.last_increment.should == 0
+    end
+    
+    it "should modify the delegated votes that were flagged as last_affected" do
+      @delegator.prepare_for_next_round
+      @affected.reload
+      @affected.last_affected.should  == true
+      @affected.affected.should == false
+      @affected.last_increment.should == 0.5
+    end
+    
+    it "should modify the delegated votes that are flagged as affected and are new" do
+      @delegator.prepare_for_next_round
+      @new_vote.reload
+      @new_vote.last_affected.should  == true
+      @new_vote.affected.should == false
+      @new_vote.last_increment.should == 1
+    end
+    
+    it "should not change the votes that haven't been affected" do
+      @delegator.prepare_for_next_round
+      @unaffected.reload
+      @unaffected.last_value.should  == 0.5
+      @unaffected.current_value.should  == 0.5
+      @unaffected.last_increment.should  == 0.25
+    end
+    
+  end
+  
 end

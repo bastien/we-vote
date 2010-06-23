@@ -1,0 +1,17 @@
+<h2><%= @proposal.title %></h2>
+<%= link_to "Back to the list", proposals_path %>
+<% if @delegated_vote %>
+  <p>At the moment, you delegated vote is <%= @delegated_vote.last_value %></p>
+<% end %>
+<p> Current score : <%= @proposal.total_score %> (<%= @proposal.total_votes_count %> voters)</p>
+<%= form_for @vote, :url => @vote.new_record? ? proposal_votes_path(@proposal) : proposal_vote_path(@proposal, @vote) do |f| %>
+  <p>
+  <%= f.radio_button :value, 1, :checked => (@vote.value == 1) %>
+  <%= f.label "value_1", "Yes"%>
+  </p>
+  <p>
+  <%= f.radio_button :value, -1, :id => "vote_value_-1", :checked => (@vote.value == -1) %>
+  <%= f.label "value_-1", "No"%>
+  </p>
+  <%= submit_tag "Vote" %>
+<% end %>

@@ -1,4 +1,6 @@
 WeVote::Application.routes.draw do |map|
+  devise_for :users
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -12,7 +14,9 @@ WeVote::Application.routes.draw do |map|
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-
+  resources :proposals do
+    resources :votes
+  end
   # Sample resource route with options:
   #   resources :products do
   #     member do
@@ -48,7 +52,7 @@ WeVote::Application.routes.draw do |map|
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+  root :to => "proposals#index"
 
   # See how all your routes lay out with "rake routes"
 

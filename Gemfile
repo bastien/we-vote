@@ -1,12 +1,20 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.0.beta3'
+gem 'rails', '3.0.0.beta4'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
-gem "rspec-rails", ">= 2.0.0.beta.10"
+gem "devise", :git => "git://github.com/plataformatec/devise.git"
+group :development do
+  gem "faker"
+end
+
+group :test do
+  gem "rspec-rails", ">= 2.0.0.beta.10"
+  gem "factory_girl"
+end
 
 # Use unicorn as the web server
 # gem 'unicorn'
