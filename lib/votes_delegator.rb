@@ -56,7 +56,11 @@ class VotesDelegator
       if target_vote.affected
         target_vote.update_attributes(:affected => true, :current_value => target_vote.current_value + partial_vote(delegated_vote, divider) )
       else
-        target_vote.update_attributes(:affected => true, :current_value => target_vote.last_value + partial_vote(delegated_vote, divider) )
+        if target_vote.last_value.nil?
+          target_vote.update_attributes(:affected => true, :current_value => partial_vote(delegated_vote, divider) )
+        else
+          target_vote.update_attributes(:affected => true, :current_value => target_vote.last_value + partial_vote(delegated_vote, divider) )
+        end
       end
     else
       new_vote = DelegatedVote.create(:proposal_id => @proposal_id, :user_id => delegatee.delegatee_id, :current_value => partial_vote(delegated_vote, divider))

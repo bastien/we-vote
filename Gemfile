@@ -7,6 +7,7 @@ gem 'rails', '3.0.0.beta4'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem "devise", "1.1.rc2"
+gem "haml"
 group :development do
   gem "faker"
 end
