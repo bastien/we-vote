@@ -4,7 +4,8 @@ class Proposal < ActiveRecord::Base
   has_many :delegated_votes
   
   def total_score
-    (votes.map(&:value) + delegated_votes.map(&:last_value)).compact.average
+    voter_ids = votes.map(&:id)
+    (votes.map(&:value) + delegated_votes.where("user_id NOT IN (?)", voter_ids).map(&:last_value)).compact.average
   end
   
   def total_votes_count

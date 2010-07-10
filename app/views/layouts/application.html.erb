@@ -15,10 +15,29 @@
       <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "sign in", new_user_session_path %>
     <% end %>
   </div>
-  
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
-<%= yield %>
+  <div id="content">
+    <div id="top">
+      <div id="title">
+        <h1>We-vote</h1>
+      </div>
+      <ul id="navigation">
+        <li class="selected"><%= link_to "Voting", "#" %></li>
+        <li><%= link_to "Pipeline", "#" %></li>
+        <li id="profile_link"><%= link_to "Profile", "#"%></li>
+        <li id="search_box">Search <input type="search" /></li>
+        <li class="clear"></li>
+      </ul>
+      <ul id="sub_navigation">
+        <li class="selected"><%= link_to "Proposal overview", proposals_path %></li>
+        <li><%= link_to "Delegations", "#" %></li>
+        <li><%= link_to "Groups", "#" %></li>
+        <li class="clear"></li>
+      </ul>
+    </div>  
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
+    <%= yield %>
+  </div>
 
 </body>
 </html>

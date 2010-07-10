@@ -1,0 +1,87 @@
+/* variables */
+/* mixins */
+/* general purpose */
+body {
+  background-color: #d4e0f7;
+  font-family: Helvetica Neue; }
+
+#top #title {
+  height: 100px;
+  width: 100%;
+  background-color: #005197;
+  background: -webkit-gradient(linear, left top, right bottom, from(#659ccb), to(#005197));
+  background: -moz-linear-gradient(left, #659ccb, #005197); }
+  #top #title h1 {
+    margin: 0px;
+    padding: 20px;
+    color: white;
+    font-weight: normal; }
+#top ul#navigation {
+  margin: 2px 0px 0px 0px;
+  /*background-color: $menu-color;*/
+  padding: 0px;
+  height: 40px; }
+  #top ul#navigation li {
+    text-align: center;
+    width: 90px;
+    display: block;
+    float: left;
+    color: white;
+    background-color: #004875;
+    margin-right: 2px; }
+    #top ul#navigation li a {
+      height: 18px;
+      color: white;
+      display: block;
+      padding: 10px 10px 0px 10px;
+      padding: 10px;
+      text-decoration: none; }
+  #top ul#navigation li#profile_link {
+    float: right;
+    background-color: #353535;
+    margin-right: 0px; }
+  #top ul#navigation li#search_box {
+    text-align: right;
+    width: 484px;
+    float: right;
+    display: block;
+    padding: 10px 10px 0px 10px;
+    height: 28px; }
+  #top ul#navigation li.clear {
+    float: none;
+    clear: both; }
+  #top ul#navigation li.selected {
+    background-color: #353535;
+    padding-bottom: 2px;
+    border-bottom: 0px; }
+#top ul#sub_navigation {
+  margin: 0px;
+  padding: 0px;
+  background-color: #353535;
+  width: 100%; }
+  #top ul#sub_navigation li {
+    display: block;
+    float: left; }
+    #top ul#sub_navigation li a {
+      color: #aaa;
+      display: block;
+      padding: 10px 10px 0px 10px;
+      padding: 10px;
+      text-decoration: none; }
+  #top ul#sub_navigation li.selected a {
+    color: white; }
+  #top ul#sub_navigation li.clear {
+    float: none;
+    clear: both; }
+
+.clear {
+  float: none;
+  clear: both; }
+
+#content {
+  background-color: white;
+  margin: auto;
+  box-shadow: 5px 5px 10px #555;
+  -webkit-box-shadow: 5px 5px 10px #555;
+  width: 780px;
+  padding: 10px; }

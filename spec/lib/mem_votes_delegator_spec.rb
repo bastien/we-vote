@@ -110,6 +110,29 @@ describe MemVotesDelegator do
     
     before(:each) do
       Vote.create!(:user_id => 1, :value => 1, :proposal_id => 30)
+      @vote_changing = Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
+      Delegation.create(:delegatee_id => 3, :delegated_id => 2)
+      Delegation.create(:delegatee_id => 4, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 4, :delegated_id => 3)
+      Delegation.create(:delegatee_id => 5, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 5, :delegated_id => 4)
+      Delegation.create(:delegatee_id => 2, :delegated_id => 1)
+      Delegation.create(:delegatee_id => 1, :delegated_id => 2)
+    end
+    
+    it "should assign a new value to all the person who delegated their vote" do
+      MemVotesDelegator.start_delegation(30, nil)
+      @vote_changing.update_attribute(:value, -1)
+      MemVotesDelegator.update_delegation(30, nil, [@vote_changing])
+      DelegatedVote.all.inject({}){|hash, dv| hash.merge({dv.user_id => dv.last_value }) }.should == {1 => 1, 2 => -1, 3 => -1, 4 => 0, 5 => 0.5}
+    end
+    
+  end
+
+  describe "when a vote is added" do
+    
+    before(:each) do
+      Vote.create!(:user_id => 1, :value => 1, :proposal_id => 30)
       Vote.create!(:user_id => 2, :value => 1, :proposal_id => 30)
       Delegation.create(:delegatee_id => 3, :delegated_id => 2)
       Delegation.create(:delegatee_id => 4, :delegated_id => 1)
@@ -121,13 +144,12 @@ describe MemVotesDelegator do
     end
     
     it "should assign a new value to all the person who delegated their vote" do
-      pending
       MemVotesDelegator.start_delegation(30, nil)
       new_vote = Vote.create!(:user_id => 3, :value => -1, :proposal_id => 30)
-      MemVotesDelegator.start_delegation(30, nil)
-      DelegatedVote.all.map{|dv| dv.last_value }.should == [1,1,0,0.5,-1]
+      MemVotesDelegator.update_delegation(30, nil, [new_vote])
+      DelegatedVote.all.inject({}){|hash, dv| hash.merge({dv.user_id => dv.last_value }) }.should == {1 => 1, 2 => 1, 3 => -1, 4 => 0, 5 => 0.5}
     end
     
   end
-  
+
 end
