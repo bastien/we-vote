@@ -3,7 +3,25 @@
 /* general purpose */
 body {
   background-color: #d4e0f7;
-  font-family: Helvetica Neue; }
+  font-family: Helvetica Neue;
+  font-size: 14px; }
+
+a {
+  text-decoration: none; }
+  a img {
+    border: 0px; }
+
+h3 {
+  padding: 0px;
+  margin: 0px;
+  font-size: 16px; }
+  h3 a {
+    color: black; }
+
+h2 {
+  color: #5483B2;
+  font-family: Times;
+  font-weight: normal; }
 
 #top #title {
   height: 100px;
@@ -78,6 +96,12 @@ body {
   float: none;
   clear: both; }
 
+.left {
+  float: left; }
+
+.right {
+  float: right; }
+
 #content {
   background-color: white;
   margin: auto;
@@ -85,3 +109,28 @@ body {
   -webkit-box-shadow: 5px 5px 10px #555;
   width: 780px;
   padding: 10px; }
+
+/* Proposal list */
+ul#proposals {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none; }
+  ul#proposals li.proposal {
+    background-color: #E6F9E9;
+    margin: 10px 0px; }
+    ul#proposals li.proposal .proposal_content {
+      padding: 10px; }
+      ul#proposals li.proposal .proposal_content .thumbnail {
+        margin-right: 10px; }
+      ul#proposals li.proposal .proposal_content .description {
+        width: 400px; }
+      ul#proposals li.proposal .proposal_content .stats {
+        text-align: center;
+        border-left: 1px solid lightgray;
+        height: 102px;
+        width: 150px;
+        padding: 0px 10px;
+        display: block; }
+    ul#proposals li.proposal .proposal_meta {
+      background-color: lightgray;
+      padding: 5px; }

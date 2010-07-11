@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100620145855) do
+ActiveRecord::Schema.define(:version => 20100711100657) do
 
   create_table "delegated_votes", :force => true do |t|
     t.integer  "user_id"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20100620145855) do
     t.integer  "theme_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "summary"
   end
 
   create_table "users", :force => true do |t|

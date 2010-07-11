@@ -8,7 +8,7 @@ class ProposalsController < ApplicationController
   
   def show
     @proposal = Proposal.find(params[:id])
-    @vote = find_vote_for_user
+    @vote = find_vote_for_user if user_signed_in?
   end
   
   def edit

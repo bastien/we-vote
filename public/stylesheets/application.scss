@@ -32,6 +32,29 @@ $selected-menu-color: #353535;
 body{
   background-color: $base-color;
   font-family: Helvetica Neue;
+  font-size: 14px;
+}
+
+a{
+  text-decoration: none;
+  img{
+   border: 0px; 
+  }
+}
+
+h3{
+  padding: 0px;
+  margin: 0px;
+  font-size: 16px;
+  a{
+    color: black;
+  }
+}
+
+h2{
+  color: #5483B2;
+  font-family: Times;
+  font-weight: normal;
 }
 
 #top{
@@ -115,6 +138,14 @@ body{
   @include clear-element;
 }
 
+.left{
+  float: left;
+}
+
+.right{
+  float: right;
+}
+
 #content{
   background-color: white;
   margin: auto;
@@ -122,4 +153,37 @@ body{
   -webkit-box-shadow: 5px 5px 10px #555;
   width: 780px;
   padding:10px;
+}
+
+/* Proposal list */
+
+ul#proposals{
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  li.proposal{
+    background-color: #E6F9E9;
+    margin: 10px 0px;
+    .proposal_content{
+      padding: 10px ;
+      .thumbnail{
+        margin-right: 10px;
+      }
+      .description{
+        width: 400px;
+      }
+      .stats{
+        text-align: center;
+        border-left: 1px solid lightgray;
+        height: 102px;
+        width: 150px;
+        padding: 0px 10px;
+        display: block
+      }
+    }
+    .proposal_meta{
+      background-color: lightgray;
+      padding: 5px ;
+    }
+  }
 }

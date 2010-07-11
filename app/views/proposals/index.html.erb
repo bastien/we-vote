@@ -1,7 +1,26 @@
 <h2>Proposal overview</h2>
-<ul>
+<ul id="proposals">
   <% @proposals.each do |proposal| %>
-    <li><%= link_to proposal.title, proposal_path(proposal) %></li>
+    <li class="proposal" id="<% dom_id(proposal) %>">
+      <div class="proposal_content">
+        <div class="thumbnail left">
+          <%= link_to(image_tag("categories/#{CATEGORIES[proposal.theme_id]}_thumb.jpg"), proposal_path(proposal)) %>
+        </div>
+        <div class="description left">
+          <h3><%= link_to proposal.title, proposal_path(proposal) %></h3>
+          <p>
+            <%= proposal.summary %>
+          </p>
+        </div>
+        <div class="stats right">
+          <h3>Your vote</h3>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <div class="proposal_meta">
+        <b>Category:</b> <%= CATEGORIES[proposal.theme_id] %>
+      </div>
+    </li>
   <% end %>
 </ul>
 <%= link_to "Create new proposal", new_proposal_path %>
