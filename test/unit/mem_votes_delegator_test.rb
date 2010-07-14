@@ -6,7 +6,7 @@ class MemVotesDelegatorTest < ActiveSupport::TestCase
   
   def test_time_to_generate_delegated_votes
     Benchmark.bm do |x|
-      x.report { MemVotesDelegator.start_delegation(1, nil) }
+      x.report { MemVotesDelegator.start_delegation(1, 4) }
     end
     puts DelegatedVote.count
     puts DelegatedVote.last.last_value

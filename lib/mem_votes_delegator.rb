@@ -97,20 +97,21 @@ class MemVotesDelegator
       end
     end
     
-    def delegations_hash(theme_id)
-      Delegation.where(:theme_id => theme_id).map do |delegation|
+    def delegations_hash(theme_id, existing_voter_ids=[])
+      Delegation.where(["delegatee_id NOT IN (?) AND theme_id = ?", existing_voter_ids, theme_id]).map do |delegation|
         {:delegated => delegation.delegated_id, :delegatee => delegation.delegatee_id}
       end
     end
     
     def start_delegation(proposal_id, theme_id)
-      mem_votes_delegator = new(votes_hash(proposal_id), delegations_hash(theme_id), proposal_id)
+      existing_votes = votes_hash(proposal_id)
+      mem_votes_delegator = new(existing_votes, delegations_hash(theme_id, existing_votes.keys), proposal_id)
       mem_votes_delegator.start!
     end
     
     def update_delegation(proposal_id, theme_id, new_votes)
       existing_votes = votes_hash(proposal_id)
-      mem_votes_delegator = new(existing_votes, delegations_hash(theme_id), proposal_id)
+      mem_votes_delegator = new(existing_votes, delegations_hash(theme_id, existing_votes.keys), proposal_id)
       delegated_votes = delegated_votes_hash(proposal_id)
       mem_votes_delegator.votes =  delegated_votes
       mem_votes_delegator.new_votes = new_votes_hash(new_votes, delegated_votes, existing_votes)
