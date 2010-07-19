@@ -48,7 +48,6 @@ class ProposalsController < ApplicationController
     vote = @proposal.votes.find_by_user_id(current_user.id)
     if vote.nil?
       vote = @proposal.votes.new
-      @delegated_vote = @proposal.delegated_votes.find_by_user_id(current_user.id)
     end
     vote
   end

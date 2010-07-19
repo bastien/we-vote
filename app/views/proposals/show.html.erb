@@ -1,8 +1,8 @@
 <h2><%= @proposal.title %></h2>
 <%= link_to "Back to the list", proposals_path %>
 <% if user_signed_in? %>
-  <% if @delegated_vote %>
-    <p>At the moment, you delegated vote is <%= @delegated_vote.last_value %></p>
+  <% if !@vote && @proposal.user_vote(current_user).value.present? %>
+    <p>At the moment, you delegated vote is <%= @proposal.user_vote(current_user).value %></p>
   <% end %>
   <p> Current score : <%= @proposal.total_score %> (<%= @proposal.total_votes_count %> voters)</p>
   <%= form_for @vote, :url => @vote.new_record? ? proposal_votes_path(@proposal) : proposal_vote_path(@proposal, @vote) do |f| %>
