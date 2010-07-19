@@ -1,0 +1,33 @@
+<li class="proposal" id="<% dom_id(proposal) %>">
+  <div class="proposal_content">
+    <div class="thumbnail left">
+      <%= link_to(image_tag("categories/#{CATEGORIES[proposal.theme_id]}_thumb.jpg"), proposal_path(proposal)) %>
+    </div>
+    <div class="description left">
+      <h3><%= link_to proposal.title, proposal_path(proposal) %></h3>
+      <p>
+        <%= proposal.summary %>
+      </p>
+    </div>
+    <% if user_signed_in? %>
+      <div class="stats right">
+        <h3>Your vote</h3>
+        <p>
+        <% if proposal.user_vote(current_user).value.present? %>
+          <%= proposal.user_vote(current_user).value %>
+          (<%= proposal.user_vote(current_user).type %>)
+        <% else %>
+          Not available
+        <% end %>
+        </p>
+        <%= form_tag proposal_path(proposal), :method => :get do %>
+          <%= submit_tag "Change" %>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="clear"></div>
+  </div>
+  <div class="proposal_meta">
+    <b>Category:</b> <%= CATEGORIES[proposal.theme_id] %>
+  </div>
+</li>
