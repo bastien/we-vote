@@ -17,6 +17,9 @@ WeVote::Application.routes.draw do |map|
   resources :proposals do
     resources :votes
   end
+  
+  resources :delegations
+  resource :profile, :controller => "profile"
   # Sample resource route with options:
   #   resources :products do
   #     member do

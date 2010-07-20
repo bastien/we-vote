@@ -13,7 +13,15 @@ class Proposal < ActiveRecord::Base
   end
   
   def total_votes_count
-    votes.count + delegated_votes.count
+    direct_votes_count + delegated_votes.count
+  end
+  
+  def direct_votes_count
+    votes.count
+  end
+  
+  def response_rate
+    direct_votes_count / User.count
   end
   
 end
