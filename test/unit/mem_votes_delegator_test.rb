@@ -2,7 +2,7 @@ require 'test_helper'
 require 'benchmark'
 
 class MemVotesDelegatorTest < ActiveSupport::TestCase
-  fixtures :users, :delegations, :proposals, :votes
+  fixtures :delegations, :proposals, :votes
   
   def test_time_to_generate_delegated_votes
     Benchmark.bm do |x|
