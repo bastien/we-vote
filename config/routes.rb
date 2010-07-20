@@ -1,6 +1,4 @@
 WeVote::Application.routes.draw do |map|
-  devise_for :users
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -14,12 +12,7 @@ WeVote::Application.routes.draw do |map|
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  resources :proposals do
-    resources :votes
-  end
   
-  resources :delegations
-  resource :profile, :controller => "profile"
   # Sample resource route with options:
   #   resources :products do
   #     member do
