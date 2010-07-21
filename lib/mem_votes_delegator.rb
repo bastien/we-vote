@@ -28,9 +28,9 @@ class MemVotesDelegator
   # This method should probbaly be put in DelegatedVote instead
   def create_or_update_delegated_vote(user_id, proposal_id, value)
     if existing_vote = DelegatedVote.where({:user_id => user_id, :proposal_id => proposal_id}).first
-      existing_vote.update_attributes(:last_value => value)
+      existing_vote.update_attributes(:value => value)
     else
-      DelegatedVote.create!(:user_id => user_id, :proposal_id => proposal_id, :last_value => value)
+      DelegatedVote.create!(:user_id => user_id, :proposal_id => proposal_id, :value => value)
     end
   end
   
@@ -82,7 +82,7 @@ class MemVotesDelegator
     
     def delegated_votes_hash(proposal_id)
       DelegatedVote.where(:proposal_id => proposal_id).inject({}) do |hash, vote|
-        hash.merge(vote.user_id => {:value => vote.last_value, :increment => vote.last_value})
+        hash.merge(vote.user_id => {:value => vote.value, :increment => vote.value})
       end
     end
     
