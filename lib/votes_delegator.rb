@@ -1,4 +1,4 @@
-class MemVotesDelegator
+class VotesDelegator
   attr_accessor :new_votes, :votes
   
   MAX_LOOP = 10
@@ -105,17 +105,17 @@ class MemVotesDelegator
     
     def start_delegation(proposal_id, theme_id)
       existing_votes = votes_hash(proposal_id)
-      mem_votes_delegator = new(existing_votes, delegations_hash(theme_id, existing_votes.keys), proposal_id)
-      mem_votes_delegator.start!
+      votes_delegator = new(existing_votes, delegations_hash(theme_id, existing_votes.keys), proposal_id)
+      votes_delegator.start!
     end
     
     def update_delegation(proposal_id, theme_id, new_votes)
       existing_votes = votes_hash(proposal_id)
-      mem_votes_delegator = new(existing_votes, delegations_hash(theme_id, existing_votes.keys), proposal_id)
+      votes_delegator = new(existing_votes, delegations_hash(theme_id, existing_votes.keys), proposal_id)
       delegated_votes = delegated_votes_hash(proposal_id)
-      mem_votes_delegator.votes =  delegated_votes
-      mem_votes_delegator.new_votes = new_votes_hash(new_votes, delegated_votes, existing_votes)
-      mem_votes_delegator.start!
+      votes_delegator.votes =  delegated_votes
+      votes_delegator.new_votes = new_votes_hash(new_votes, delegated_votes, existing_votes)
+      votes_delegator.start!
     end
     
   end
