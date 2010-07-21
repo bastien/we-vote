@@ -9,7 +9,7 @@ Installation
 
 From the root of your rails ( >= 3) application run:
 rails plugin install git://github.com/bastien/we-vote.git #will install the plugin under vendor
-rake we_decide:sync #will copy the migration files
+rake we_vote:sync #will copy the migration files
 rake db:migrate #will generate the tables
 
 Example
